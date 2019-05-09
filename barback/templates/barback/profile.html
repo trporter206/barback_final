@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Profile</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <body>
+    <p>{{user}}</p>
+    <p>{{user.first_name}}</p>
+    <p>{{user.last_name}}</p>
+    <p>{{user.email}}</p>
+    <a href="{% url 'barback:edit_profile' %}">edit</a>
+  </body>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+<head>
+  {% block head %}
+  <title>{{ cocktail.cocktail_name }}</title>
+  {% endblock %}
+</head>
+
+{% block body %}
+{% load static %}
+<div class="container">
+  <link rel="stylesheet" type="text/css" href="{% static 'barback/style.css' %}">
+  <img src="{{ cocktail.cocktail_image.url }}" alt="img" width="240">
+  <h1>{{ cocktail.cocktail_name }}</h1>
+  <p>{{ cocktail.pub_date }}</p>
+  <p>{{ cocktail.user.username }}</p>
+
+  {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+  <h3>{{ cocktail.cocktail_type }}</h3>
+  <h2>how to create</h2>
+  <p>{{ cocktail.cocktail_steps }}</p>
+  <a href="{% url 'barback:delete' cocktail.id  %}">delete</a>
+</div>
+
+{% endblock %}
