@@ -32,7 +32,7 @@ from django.contrib.auth.models import User
 
 class IndexView(generic.ListView):
     template_name = 'barback/index.html'
-    context_object_name = 'latest_cocktail_list'
+    context_object_name = 'latest_cocktails'
 
     def get_queryset(self):
         return Cocktail.objects.order_by('-pub_date')
@@ -57,9 +57,12 @@ class CreateView(generic.edit.CreateView):
 class AboutView(generic.TemplateView):
     template_name = "barback/about.html"
 
-def view_profile(request):
-    args = {'user': request.user}
-    return render(request, 'barback/profile.html', args)
+class ProfileView(generic.ListView):
+    template_name = 'barback/profile.html'
+    context_object_name = 'user_cocktails'
+
+    def get_queryset(self):
+        return Cocktail.objects.filter(user=self.request.user).order_by('-pub_date')
 
 def register(request):
     template_name = 'registration/registration_form.html'

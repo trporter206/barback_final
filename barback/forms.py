@@ -17,7 +17,7 @@ class CocktailForm(forms.ModelForm):
         ]
 
     def save(self, commit=True):
-        cocktail = super(CocktailForm, self).save(commit=False)
+        cocktail                = super(CocktailForm, self).save(commit=False)
         cocktail.cocktail_name  = self.cleaned_data['cocktail_name']
         cocktail.cocktail_info  = self.cleaned_data['cocktail_info']
         cocktail.cocktail_steps = self.cleaned_data['cocktail_steps']

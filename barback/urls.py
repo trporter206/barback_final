@@ -21,7 +21,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', LoginView.as_view(template_name='registration/login.html', redirect_field_name=('http://127.0.0.1:8000/barback/')), name="login"),
     path('logout/', views.logout_view, name='logout'),
-    path('profile/', views.view_profile, name='profile'),
+    path('profile/', views.ProfileView.as_view(), name='profile'),
     path('profile/edit', views.edit_profile, name='edit_profile'),
     path('password/', views.change_password, name='change_password'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
