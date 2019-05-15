@@ -14,6 +14,7 @@ class CocktailForm(forms.ModelForm):
             "cocktail_info",
             "cocktail_steps",
             "virgin",
+            "user",
         ]
 
     def save(self, commit=True):
@@ -21,7 +22,6 @@ class CocktailForm(forms.ModelForm):
         cocktail.cocktail_name  = self.cleaned_data['cocktail_name']
         cocktail.cocktail_info  = self.cleaned_data['cocktail_info']
         cocktail.cocktail_steps = self.cleaned_data['cocktail_steps']
-        cocktail.user           = self.request.user
 
         if commit:
             cocktail.save()

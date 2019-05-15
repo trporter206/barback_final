@@ -19,7 +19,9 @@
   <h3>{{ cocktail.cocktail_type }}</h3>
   <h2>how to create</h2>
   <p>{{ cocktail.cocktail_steps }}</p>
-  <a href="{% url 'barback:delete' cocktail.id  %}">delete</a>
+  {% if cocktail.user == request.user %}
+    <a href="{% url 'barback:delete' cocktail.id  %}">delete</a>
+  {% endif %}
 </div>
 
 {% endblock %}

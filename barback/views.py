@@ -54,6 +54,10 @@ class CreateView(generic.edit.CreateView):
               'virgin',
               ]
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 class AboutView(generic.TemplateView):
     template_name = "barback/about.html"
 
@@ -80,9 +84,7 @@ def save(request, cocktail_id):
     form = CocktailForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.user = request.user
         instance.save()
-        messages.success(request, "Successfully Created")
         return HttpResponseRedirect(reverse('barback:detail', args=(cocktail.id,)))
 
 def delete(request, cocktail_id):
