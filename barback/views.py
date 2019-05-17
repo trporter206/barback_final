@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import generic, View
 from django.utils import timezone
 from .models import Cocktail, User
@@ -68,17 +68,28 @@ class ProfileView(generic.ListView):
     def get_queryset(self):
         return Cocktail.objects.filter(user=self.request.user).order_by('-pub_date')
 
-def register(request):
+class RegisterView(generic.edit.CreateView):
     template_name = 'registration/registration_form.html'
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('barback:index')
-    else:
-        form = UserForm()
-        return render(request, template_name, {'form': form})
+    form_class    = UserForm
+
+def validate_username(request):
+    username = request.GET.get('username', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    return JsonResponse(data)
+
+# def register(request):
+#     template_name = 'registration/registration_form.html'
+#     if request.method == 'POST':
+#         form = UserForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             login(request, user)
+#             return redirect('barback:index')
+#     else:
+#         form = UserForm()
+#         return render(request, template_name, {'form': form})
 
 def save(request, cocktail_id):
     form = CocktailForm(request.POST or None, request.FILES or None)
