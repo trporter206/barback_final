@@ -3,17 +3,14 @@
 {% block javascript %}
   <script>
     $("#id_username").change(function () {
-      var username = $(this).val();
-
+      var form = $(this).closest("form");
       $.ajax({
-        url: '/ajax/validate_username/',
-        data: {
-          'username': username
-        },
+        url: form.attr("data-validate-username-url"),
+        data: form.serialize(),
         dataType: 'json',
         success: function (data) {
           if (data.is_taken) {
-            alert("Username is already taken");
+            alert(data.error_message);
           }
         }
       });
@@ -23,7 +20,7 @@
 {% block body %}
   <div class="container">
     <h2>Create your account</h2>
-    <form method="post">
+    <form method="post" data-validate-username-url="/ajax/validate_username/">
       {% csrf_token %}
       {{ form.as_p }}
       <input type="submit" value="Register">
