@@ -30,16 +30,18 @@
         {% if latest_cocktails %}
         {% for cocktail in latest_cocktails %}
         <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 recipe" id="{{ cocktail.cocktail_name }}">
-          <div class="card">
-            <img src="{{ cocktail.cocktail_image.url }}" class="card-img-top"
-                 height="185" width="278">
-            <div class="card-body">
-              <a href="{% url 'barback:detail' cocktail.id %}">
-                <h5 class="card-title text-center">{{ cocktail.cocktail_name }}</h5>
-              </a>
-              <p class="card-text text-center">{{ cocktail.cocktail_info }}</p>
+          <a href="{% url 'barback:detail' cocktail.id %}">
+            <div class="card">
+              <img src="{{ cocktail.cocktail_image.url }}" class="card-img-top"
+              height="185" width="278">
+              <div class="card-body">
+                <a href="{% url 'barback:detail' cocktail.id %}">
+                  <h5 class="card-title text-center">{{ cocktail.cocktail_name }}</h5>
+                </a>
+                <p class="card-text text-center">{{ cocktail.cocktail_info }}</p>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
         {% endfor %}
         {% else %}

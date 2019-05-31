@@ -81,18 +81,6 @@ def validate_username(request):
         data['error_message'] = "Username is already taken"
     return JsonResponse(data)
 
-# def register(request):
-#     template_name = 'registration/registration_form.html'
-#     if request.method == 'POST':
-#         form = UserForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)
-#             return redirect('barback:index')
-#     else:
-#         form = UserForm()
-#         return render(request, template_name, {'form': form})
-
 def save(request, cocktail_id):
     form = CocktailForm(request.POST or None, request.FILES or None)
     if form.is_valid():
@@ -108,7 +96,6 @@ def delete(request, cocktail_id):
 def logout_view(request):
     logout(request)
     return redirect('barback:index')
-
 
 def edit_profile(request):
     template_name = 'barback/edit_profile.html'
