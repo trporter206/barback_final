@@ -41,6 +41,29 @@ class Cocktail(models.Model):
     def get_absolute_url(self):
         return reverse("barback:detail", kwargs={"id": self.id})
 
+    @classmethod
+    def manhattan(cls):
+        manhattan = cls.objects.create(cocktail_name  = "manhattan",
+                                       cocktail_info  = "a classic drink",
+                                       cocktail_steps = "shake it in a shaker",
+                                       cocktail_type  = "Whiskey",
+                                       virgin         =  False,)
+        return manhattan
+
+    @classmethod
+    def martini(cls):
+        martini = cls.objects.create(cocktail_name  = "martini",
+                                       cocktail_info  = "youve seen bond",
+                                       cocktail_steps = "shaken, not stirred",
+                                       cocktail_type  = "Vodka",
+                                       virgin         =  False,)
+        return martini
+
+    @classmethod
+    def get_by_type(cls, type):
+        cocktails = cls.objects.filter(cocktail_type = type)
+        return cocktails
+
     was_published_recently.admin_order_field = 'pub_date'
     was_published_recently.boolean = True
     was_published_recently.short_description = 'Published recently?'

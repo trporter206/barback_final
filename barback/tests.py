@@ -1,45 +1,11 @@
 from django.test import RequestFactory, TestCase
-from django.contrib.auth.models import AnonymousUser, User
 from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 from .models import Cocktail, User
 from datetime import datetime, timedelta
 from .forms import CocktailForm
 from .views import ProfileView
-
-# Create your tests here.
-class CocktailTestCase(TestCase):
-    def setUp(self):
-        pub_time = timezone.now() - timedelta(days=1)
-        Cocktail.objects.create(cocktail_name   ="cocktail",
-                                pub_date        = pub_time,
-                                cocktail_info   ="info",
-                                cocktail_steps  ="steps",
-                                virgin          = False,)
-        Cocktail.objects.create(cocktail_name   ="virgin_cocktail",
-                                pub_date        = pub_time,
-                                cocktail_info   ="info",
-                                cocktail_steps  ="steps",
-                                virgin          = True,)
-
-    def test_cocktail_is_virgin(self):
-        virgin = Cocktail.objects.get(cocktail_name="virgin_cocktail")
-        self.assertEqual(virgin.virgin, True)
-
-    def test_cocktail_is_not_virgin(self):
-        non_virgin = Cocktail.objects.get(cocktail_name="cocktail")
-        self.assertEqual(non_virgin.virgin, False)
-
-    def test_pub_date_is_correct(self):
-        cocktail = Cocktail.objects.get(cocktail_name="cocktail")
-        now = timezone.now()
-        self.assertTrue(cocktail.pub_date < now)
-
-    def test_string_fields_are_strings(self):
-        cocktail = Cocktail.objects.get(cocktail_name="cocktail")
-        self.assertTrue(isinstance(cocktail.cocktail_name, str))
-        self.assertTrue(isinstance(cocktail.cocktail_info, str))
-        self.assertTrue(isinstance(cocktail.cocktail_steps, str))
 
 class CocktailFormTestCase(TestCase):
     def setUp(self):
@@ -74,19 +40,56 @@ class CocktailFormTestCase(TestCase):
         form = CocktailForm({})
         self.assertFalse(form.is_valid())
 
-class UserTestCase(TestCase):
+class CocktailTestCase(TestCase):
     def setUp(self):
-        # self.factory = RequestFactory()
-        pass
+        pub_time = timezone.now()
+        Cocktail.objects.create(cocktail_name   ="cocktail",
+                                pub_date        = pub_time,
+                                cocktail_info   ="info",
+                                cocktail_steps  ="steps",
+                                cocktail_type   ="Whiskey",
+                                virgin          = False,)
+        Cocktail.objects.create(cocktail_name   ="virgin_cocktail",
+                                pub_date        = pub_time,
+                                cocktail_info   ="info",
+                                cocktail_steps  ="steps",
+                                cocktail_type   ="Vodka",
+                                virgin          = True,)
 
-    def test_user_fields(self):
-        User.objects.create()
-        user = User.objects.create()
-        self.assertEqual(user.username, "test")
+    def test_cocktails_created(self):
+        self.assertEqual(len(Cocktail.objects.all()), 2)
 
-    # def test_profile(self):
-    #     request = self.factory.get('profile/')
-    #     request.user = self.user
-    #     response = ProfileView(request)
-    #     response = ProfileView.as_view()(request)
-    #     self.assertEqual(response.status_code, 200)
+    def test_cocktail_is_virgin(self):
+        virgin = Cocktail.objects.get(cocktail_name="virgin_cocktail")
+        self.assertEqual(virgin.virgin, True)
+
+    def test_cocktail_is_not_virgin(self):
+        non_virgin = Cocktail.objects.get(cocktail_name="cocktail")
+        self.assertEqual(non_virgin.virgin, False)
+
+    def test_was_published_recently(self):
+        cocktail = Cocktail.objects.get(cocktail_name = "cocktail")
+        self.assertTrue(cocktail.was_published_recently())
+
+    def test_string_fields_are_strings(self):
+        cocktail = Cocktail.objects.get(cocktail_name="cocktail")
+        self.assertTrue(isinstance(cocktail.cocktail_name, str))
+        self.assertTrue(isinstance(cocktail.cocktail_info, str))
+        self.assertTrue(isinstance(cocktail.cocktail_steps, str))
+
+    def test_manhattan(self):
+        manhattan = Cocktail.manhattan()
+        self.assertEqual(manhattan.cocktail_name, "manhattan")
+
+    def test_martini(self):
+        martini = Cocktail.martini()
+        self.assertEqual(martini.cocktail_name, "martini")
+
+    def test_get_by_types(self):
+        whiskey_list = [Cocktail.get_by_type("Whiskey")]
+        vodka_list = [Cocktail.get_by_type("Vodka")]
+        self.assertEqual(len(whiskey_list), 1)
+        self.assertEqual(len(vodka_list), 1)
+        Cocktail.manhattan()
+        whiskey_list = Cocktail.get_by_type("Whiskey")
+        self.assertEqual(len(whiskey_list), 2)
